@@ -8,7 +8,7 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import ru.baskaeva.dressshop.models.User;
+
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -48,7 +48,7 @@ public class JwtTokenUtil {
     }
 
     public String generateAccessToken(UserDetails user) {
-        return generateToken(user, 1000 * 60 * 30);
+        return generateToken(user, 1000 * 60 * 60 * 24 * 14);
     }
 
     public String generateRefreshToken(UserDetails user) {

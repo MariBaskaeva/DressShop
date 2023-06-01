@@ -5,11 +5,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ru.baskaeva.dressshop.models.Product;
-import ru.baskaeva.dressshop.models.Role;
-import ru.baskaeva.dressshop.models.User;
-import ru.baskaeva.dressshop.repositories.ProductRepository;
-import ru.baskaeva.dressshop.repositories.UserRepository;
+import ru.baskaeva.dressshop.models.product.Product;
+import ru.baskaeva.dressshop.models.product.ProductInfo;
+import ru.baskaeva.dressshop.models.user.Role;
+import ru.baskaeva.dressshop.models.user.User;
+import ru.baskaeva.dressshop.repositories.product.ProductRepository;
+import ru.baskaeva.dressshop.repositories.user.UserRepository;
 
 @SpringBootApplication
 public class DressShopApplication {
@@ -18,7 +19,7 @@ public class DressShopApplication {
         SpringApplication.run(DressShopApplication.class, args);
     }
 
-    @Bean
+//    @Bean
     public CommandLineRunner run(UserRepository userRepository, ProductRepository productRepository, PasswordEncoder passwordEncoder) {
         return args -> {
             User user = User.builder()
@@ -41,16 +42,6 @@ public class DressShopApplication {
                     .build();
             userRepository.save(user);
             userRepository.save(admin);
-
-            Product product = Product.builder()
-                    .vendorCode("123213123")
-                    .color("Black")
-                    .description("Good things")
-                    .type(Product.Type.SKIRT)
-                    .manufacturer("abibas")
-                    .image("qwe.jpg")
-                    .build();
-            productRepository.save(product);
         };
     }
 }

@@ -16,17 +16,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import ru.baskaeva.dressshop.config.JwtTokenUtil;
-import ru.baskaeva.dressshop.dto.CredentialDTO;
-import ru.baskaeva.dressshop.dto.TokenDTO;
-import ru.baskaeva.dressshop.models.Bag;
-import ru.baskaeva.dressshop.models.Role;
-import ru.baskaeva.dressshop.models.User;
-import ru.baskaeva.dressshop.repositories.BagRepository;
-import ru.baskaeva.dressshop.repositories.UserRepository;
+import ru.baskaeva.dressshop.dto.user.CredentialDTO;
+import ru.baskaeva.dressshop.dto.user.TokenDTO;
+import ru.baskaeva.dressshop.models.user.Role;
+import ru.baskaeva.dressshop.models.user.User;
+import ru.baskaeva.dressshop.repositories.user.UserRepository;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,7 +31,6 @@ public class AuthenticationController {
     private final UserDetailsService userDetailsService;
     private final JwtTokenUtil tokenUtil;
     private final UserRepository userRepository;
-    private final BagRepository bagRepository;
 
     @GetMapping("/role")
     public Collection<? extends GrantedAuthority> getRole(@AuthenticationPrincipal User user){
@@ -70,10 +65,7 @@ public class AuthenticationController {
         // TODO: 21.04.2023 Инжектировать в класс PasswordEncoder,а не создавать его тут
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         user.setRole(Role.ROLE_USER);
-        User savedUser = userRepository.save(user);
-        bagRepository.save(Bag.builder()
-                        .user(savedUser)
-                .build());
+        userRepository.save(user);
 
         return login(new CredentialDTO(user.getEmail(), password));
     }

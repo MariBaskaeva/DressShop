@@ -4,12 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import ru.baskaeva.dressshop.dto.bag.BagProductDTO;
 import ru.baskaeva.dressshop.exceptions.NoSuchProductException;
-import ru.baskaeva.dressshop.models.Bag;
-import ru.baskaeva.dressshop.models.Product;
-import ru.baskaeva.dressshop.models.User;
-import ru.baskaeva.dressshop.services.BagService;
-import ru.baskaeva.dressshop.services.BagServiceImpl;
+import ru.baskaeva.dressshop.models.bag.BagProduct;
+import ru.baskaeva.dressshop.models.user.User;
+import ru.baskaeva.dressshop.services.interfaces.IBagService;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -17,25 +18,25 @@ import ru.baskaeva.dressshop.services.BagServiceImpl;
 @RequiredArgsConstructor
 @RequestMapping("/bag")
 public class BagController {
-    private final BagService bagService;
+    private final IBagService bagService;
 
     @GetMapping
-    public Bag getBag(@AuthenticationPrincipal User user){
+    public List<BagProductDTO> getBag(@AuthenticationPrincipal User user){
         return bagService.getBag(user);
     }
 
     @PostMapping("{id}")
-    public Bag postProductToBag(@AuthenticationPrincipal User user, @PathVariable Long id) throws NoSuchProductException {
+    public BagProduct postProductToBag(@AuthenticationPrincipal User user, @PathVariable Long id) throws NoSuchProductException {
         return bagService.addProductToBag(user, id);
     }
 
     @DeleteMapping("{id}")
-    public Bag deleteProductFromBag(@AuthenticationPrincipal User user, @PathVariable Long id) throws NoSuchProductException {
-        return bagService.deleteFromBag(id, user);
+    public void deleteProductFromBag(@AuthenticationPrincipal User user, @PathVariable Long id) throws NoSuchProductException {
+        bagService.deleteFromBag(id, user);
     }
 
     @DeleteMapping
-    public Bag deleteProductsFromBag(@AuthenticationPrincipal User user){
-        return bagService.clearBag(user);
+    public void deleteProductsFromBag(@AuthenticationPrincipal User user){
+        bagService.clearBag(user);
     }
 }

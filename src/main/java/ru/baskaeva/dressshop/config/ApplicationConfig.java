@@ -11,8 +11,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ru.baskaeva.dressshop.models.User;
-import ru.baskaeva.dressshop.repositories.UserRepository;
+import ru.baskaeva.dressshop.models.user.User;
+import ru.baskaeva.dressshop.repositories.user.UserRepository;
 
 @Configuration
 @RequiredArgsConstructor
@@ -26,12 +26,8 @@ public class ApplicationConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> {
-            User user = userRepository.findByEmail(username);
-            if (user != null)
-                return user;
-            throw new UsernameNotFoundException("User '" + username + "' not found");
-        };
+        return username ->
+                userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User '" + username + "' not found"));
     }
 
     @Bean
